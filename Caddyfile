@@ -1,0 +1,43 @@
+{
+local_certs
+}
+
+ec2-3-21-104-104.us-east-2.compute.amazonaws.com {
+   tls internal
+   handle_path /api/* {
+        reverse_proxy web_dotnet:5000 {
+            header_down Access-Control-Allow-Origin *
+            header_down Access-Control-Allow-Methods *
+            header_down Access-Control-Allow-Headers *
+        }
+    }
+
+    handle_path /automation/* {
+        reverse_proxy django_automation:8000 {
+            header_down Access-Control-Allow-Origin *
+            header_down Access-Control-Allow-Methods *
+            header_down Access-Control-Allow-Headers *
+        }
+    }
+
+    handle_path /tongue/* {
+        reverse_proxy web_tonguecapture:3000 {
+            header_down Access-Control-Allow-Origin *
+            header_down Access-Control-Allow-Methods *
+            header_down Access-Control-Allow-Headers *
+        }
+    }
+
+    handle {
+        reverse_proxy web_angular {
+            header_down Access-Control-Allow-Origin *
+            header_down Access-Control-Allow-Methods *
+            header_down Access-Control-Allow-Headers *
+        }
+    }
+
+    log {
+        output stdout
+        level debug
+    }
+}

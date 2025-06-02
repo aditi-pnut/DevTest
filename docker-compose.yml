@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:test-v02-Jun-2025
+    container_name: web_angular
+    networks:
+      - my_network
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-2
+        awslogs-group: Test-logs
+        awslogs-stream: frontend
+
+  backend:
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:test-v02-Jun-2025
+    container_name: django_automation
+    networks:
+      - my_network
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-2
+        awslogs-group: Test-logs
+        awslogs-stream: backend
+
+  coreapi:
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:test-v02-Jun-2025
+    container_name: web_dotnet
+    networks:
+      - my_network
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-2
+        awslogs-group: Test-logs
+        awslogs-stream: coreapi
+
+  tonguecapture:
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:test-v02-Jun-2025
+    container_name: web_tonguecapture
+    networks:
+      - my_network
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-2
+        awslogs-group: Test-logs
+        awslogs-stream: tonguecapture
+
+  reverse_proxy:
+    image: caddy:latest
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - my_network
+    depends_on:
+      - frontend
+      - backend
+      - coreapi
+      - tonguecapture
+
+networks:
+  my_network:
+    driver: bridge
