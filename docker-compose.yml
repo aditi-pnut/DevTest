@@ -28,6 +28,8 @@ services:
   coreapi:
     image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:test-v02-Jun-2025
     container_name: web_dotnet
+    environment:
+    - ASPNETCORE_ENVIRONMENT=PRODUCTION
     networks:
       - my_network
     logging:
