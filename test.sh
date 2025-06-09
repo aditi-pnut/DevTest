@@ -11,7 +11,7 @@ aws ecr get-login-password --region us-east-2 | docker login --username AWS --pa
 
 # Change to the correct directory
 echo "Changing to project directory..."
-cd /home/ubuntu/pnut/
+cd /home/ubuntu/pnut-code/
 
 # Stop existing containers
 echo "Stopping existing containers..."
