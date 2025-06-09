@@ -2,8 +2,12 @@ version: "3.8"
 
 services:
   frontend:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:test-v02-Jun-2025
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:test-latest
     container_name: web_angular
+    restart: always
+    env_file:
+      - ./config.env
+      - ./db.env
     networks:
       - my_network
     logging:
@@ -14,8 +18,12 @@ services:
         awslogs-stream: frontend
 
   backend:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:test-v02-Jun-2025
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:test-latest
     container_name: django_automation
+    restart: always
+    env_file:
+      - ./config.env
+      - ./db.env
     networks:
       - my_network
     logging:
@@ -26,10 +34,15 @@ services:
         awslogs-stream: backend
 
   coreapi:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:test-v02-Jun-2025
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:test-latest
     container_name: web_dotnet
+    restart: always
     environment:
-    - ASPNETCORE_ENVIRONMENT=PRODUCTION
+      - DOTNET_CLI_TELEMETRY_OPTOUT=1
+      - ASPNETCORE_ENVIRONMENT=PRODUCTION
+    env_file:
+      - ./db.env
+      - ./config.env
     networks:
       - my_network
     logging:
@@ -40,20 +53,27 @@ services:
         awslogs-stream: coreapi
 
   tonguecapture:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:test-v02-Jun-2025
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:test-latest
     container_name: web_tonguecapture
+    restart: always
+    environment:
+      - DOTNET_CLI_TELEMETRY_OPTOUT=1
+      - ASPNETCORE_ENVIRONMENT=PRODUCTION
+    env_file:
+      - ./db.env
+      - ./config.env
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2G
     networks:
       - my_network
-    logging:
-      driver: awslogs
-      options:
-        awslogs-region: us-east-2
-        awslogs-group: Test-logs
-        awslogs-stream: tonguecapture
 
   reverse_proxy:
     image: caddy:latest
     container_name: caddy
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -70,4 +90,3 @@ services:
 networks:
   my_network:
     driver: bridge
-    
