@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   frontend:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:test-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:staging-latest
     container_name: web_angular
     restart: always
     env_file:
@@ -18,7 +18,7 @@ services:
         awslogs-stream: frontend
 
   backend:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:test-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:staging-latest
     container_name: django_automation
     restart: always
     env_file:
@@ -34,7 +34,7 @@ services:
         awslogs-stream: backend
 
   coreapi:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:test-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:staging-latest
     container_name: web_dotnet
     restart: always
     environment:
@@ -53,7 +53,7 @@ services:
         awslogs-stream: coreapi
 
   tonguecapture:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:test-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:staging-latest
     container_name: web_tonguecapture
     restart: always
     environment:
