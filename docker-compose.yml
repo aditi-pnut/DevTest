@@ -2,7 +2,8 @@ version: "3.8"
 
 services:
   frontend:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:staging-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:${FRONTEND_TAG}
+#    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilife-frontend-dummy:latest
     container_name: web_angular
     restart: always
     env_file:
@@ -18,7 +19,8 @@ services:
         awslogs-stream: frontend
 
   backend:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:staging-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:${BACKEND_TAG}
+#    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/reportautomationbackend-dummy:latest
     container_name: django_automation
     restart: always
     env_file:
@@ -34,7 +36,8 @@ services:
         awslogs-stream: backend
 
   coreapi:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:staging-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:${COREAPI_TAG}
+#    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/theomnilifecoreapi-dummy:latest
     container_name: web_dotnet
     restart: always
     environment:
@@ -53,7 +56,8 @@ services:
         awslogs-stream: coreapi
 
   tonguecapture:
-    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:staging-latest
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:${TONGUE_TAG}
+#    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/omnilife-tonguecapture-dummy:latest
     container_name: web_tonguecapture
     restart: always
     environment:
@@ -69,6 +73,29 @@ services:
           memory: 2G
     networks:
       - my_network
+
+  activitydashboard:
+    image: 878239241975.dkr.ecr.us-east-2.amazonaws.com/activity-dashboard:${ACTIVITY_TAG}
+    container_name: activity-dashboard
+    restart: always
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+    env_file:
+      - ./config.env
+      - ./db.env
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+    networks:
+      - my_network
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-2
+        awslogs-group: Test-logs
+        awslogs-stream: activity-dashboard
 
   reverse_proxy:
     image: caddy:latest
@@ -86,7 +113,7 @@ services:
       - backend
       - coreapi
       - tonguecapture
-
+      - activitydashboard
 networks:
   my_network:
     driver: bridge
